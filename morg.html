@@ -47,14 +47,6 @@
             // קריאה ל-ChatGPT
             const message = `בהתחשב בסכום של ${amount} ש\"ח, ריבית של ${(interest * 12 * 100).toFixed(2)}% לשנה ולתקופה של ${years} שנים במסלול ${track}, תן הסבר מה היתרונות והחסרונות.`;
 
-            const response = await ffetch("http://localhost:3000/api/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ message })
-            });
-
             const data = await response.json();
             document.getElementById('ai').innerText = data.choices[0].message.content;
         }
