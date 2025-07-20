@@ -9,28 +9,30 @@
 </head>
 
 <body>
-    <h1>מחשבון משכנתא חכם</h1>
+    <div class="container">
+        <h1>מחשבון משכנתא חכם</h1>
 
-    <label>סכום ההלוואה (ש"ח):</label>
-    <input type="number" id="amount" placeholder="לדוגמה: 800000">
+        <label>סכום ההלוואה (ש"ח):</label>
+        <input type="number" id="amount" placeholder="לדוגמה: 800000">
 
-    <label>ריבית שנתית (%):</label>
-    <input type="number" step="0.01" id="interest" placeholder="לדוגמה: 3.5">
+        <label>ריבית שנתית (%):</label>
+        <input type="number" step="0.01" id="interest" placeholder="לדוגמה: 3.5">
 
-    <label>מספר שנים:</label>
-    <input type="number" id="years" placeholder="לדוגמה: 20">
+        <label>מספר שנים:</label>
+        <input type="number" id="years" placeholder="לדוגמה: 20">
 
-    <label>מסלול משכנתא:</label>
-    <select id="track">
-        <option value="קל" צ">קל"צ</option>
-        <option value="פריים">פריים</option>
-        <option value="משתנה">משתנה</option>
-    </select>
+        <label>מסלול משכנתא:</label>
+        <select id="track">
+            <option value="קל" צ">קל"צ</option>
+            <option value="פריים">פריים</option>
+            <option value="משתנה">משתנה</option>
+        </select>
 
-    <button onclick="calculateMortgage()">חשב</button>
+        <button onclick="calculateMortgage()">חשב</button>
 
-    <div class="result" id="result"></div>
-    <div class="ai-response" id="ai"></div>
+        <div class="result" id="result"></div>
+        <div class="ai-response" id="ai"></div>
+    </div>
 
     <script>
         async function calculateMortgage() {
@@ -44,11 +46,24 @@
             const resultText = `החזר חודשי: ${monthly.toFixed(2)} ש"ח לחודש`;
             document.getElementById('result').innerText = resultText;
 
-            // קריאה ל-ChatGPT
-            const message = `בהתחשב בסכום של ${amount} ש\"ח, ריבית של ${(interest * 12 * 100).toFixed(2)}% לשנה ולתקופה של ${years} שנים במסלול ${track}, תן הסבר מה היתרונות והחסרונות.`;
+            // שליחת השאלה לשרת Node.js
+            const message = `בהתחשב בסכום של ${amount} ש"ח, ריבית של ${(interest * 12 * 100).toFixed(2)}% לשנה ולתקופה של ${years} שנים במסלול ${track}, תן הסבר מה היתרונות והחסרונות.`;
 
-            const data = await response.json();
-            document.getElementById('ai').innerText = data.choices[0].message.content;
+            try {
+                const response = await fetch("http://localhost:3000/api/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+                document.getElementById('ai').innerText = data.choices[0].message.content;
+            } catch (err) {
+                document.getElementById('ai').innerText = "שגיאה בקבלת תגובה מהבינה המלאכותית.";
+                console.error(err);
+            }
         }
     </script>
 </body>
