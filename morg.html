@@ -1,71 +1,35 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מחשבון משכנתא חכם</title>
-    <link rel="stylesheet" href="morg.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>מחשבון משכנתא</title>
+    <link rel="stylesheet" href="morg.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
     <div class="container">
-        <h1>מחשבון משכנתא חכם</h1>
+        <h1><i class="fas fa-calculator"></i> מחשבון משכנתא</h1>
+        <p>הכנס את פרטי ההלוואה שלך כדי לחשב את התשלומים החודשיים.</p>
+        <form id="mortgage-form">
+            <label>סכום ההלוואה (₪):</label>
+            <input type="number" id="amount" required />
 
-        <label>סכום ההלוואה (ש"ח):</label>
-        <input type="number" id="amount" placeholder="לדוגמה: 800000">
+            <label>ריבית שנתית (%):</label>
+            <input type="number" step="0.01" id="rate" required />
 
-        <label>ריבית שנתית (%):</label>
-        <input type="number" step="0.01" id="interest" placeholder="לדוגמה: 3.5">
+            <label>מספר שנים:</label>
+            <input type="number" id="years" required />
 
-        <label>מספר שנים:</label>
-        <input type="number" id="years" placeholder="לדוגמה: 20">
-
-        <label>מסלול משכנתא:</label>
-        <select id="track">
-            <option value="קל" צ">קל"צ</option>
-            <option value="פריים">פריים</option>
-            <option value="משתנה">משתנה</option>
-        </select>
-
-        <button onclick="calculateMortgage()">חשב</button>
-
-        <div class="result" id="result"></div>
-        <div class="ai-response" id="ai"></div>
+            <button type="submit">חשב</button>
+        </form>
+        <div id="results"></div>
     </div>
 
-    <script>
-        async function calculateMortgage() {
-            const amount = +document.getElementById('amount').value;
-            const interest = +document.getElementById('interest').value / 100 / 12;
-            const years = +document.getElementById('years').value;
-            const n = years * 12;
-            const track = document.getElementById('track').value;
-
-            const monthly = (amount * interest * Math.pow(1 + interest, n)) / (Math.pow(1 + interest, n) - 1);
-            const resultText = `החזר חודשי: ${monthly.toFixed(2)} ש"ח לחודש`;
-            document.getElementById('result').innerText = resultText;
-
-            // שליחת השאלה לשרת Node.js
-            const message = `בהתחשב בסכום של ${amount} ש"ח, ריבית של ${(interest * 12 * 100).toFixed(2)}% לשנה ולתקופה של ${years} שנים במסלול ${track}, תן הסבר מה היתרונות והחסרונות.`;
-
-            try {
-                const response = await fetch("http://localhost:3000/api/chat", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ message })
-                });
-
-                const data = await response.json();
-                document.getElementById('ai').innerText = data.choices[0].message.content;
-            } catch (err) {
-                document.getElementById('ai').innerText = "שגיאה בקבלת תגובה מהבינה המלאכותית.";
-                console.error(err);
-            }
-        }
-    </script>
+    <script src="morg.js"></script>
 </body>
 
 </html>
