@@ -1,2 +1,2 @@
-# Smart-Mortgage-Calculator-with-AI-Advisor
-Smart Mortgage Calculator with AI Advisor final year prj
+# Smart-Mortgage-Calculator
+Smart Mortgage Calculator final year prj
